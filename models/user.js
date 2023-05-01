@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
     validate: {
       validator: function (v) {
         return v.length > 3;
@@ -29,16 +30,17 @@ const userSchema = new mongoose.Schema({
       message: "Email must be more than 3 characters",
     },
   },
+  
   thoughts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Thoughts",
+      ref: "Thought",
     },
   ],
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Friends",
+      ref: "User",
     },
   ],
 });
@@ -53,7 +55,6 @@ const user = new User({
     name: "Ameer",
     email: "ameer@gmail.com",
     username: "ameer",
-    password: "password",
     thoughts: [
         {
             text: "I love to eat rice",
