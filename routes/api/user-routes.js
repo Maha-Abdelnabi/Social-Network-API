@@ -22,7 +22,7 @@ const User  = require("../../models/User");
             });
 
 
- //post
+// POST /api/users
  router.post("/", (req, res) => {
    try {
      const user = User.create(req.body);
@@ -32,5 +32,40 @@ const User  = require("../../models/User");
      res.status(500).json({ message: error.message });
    }
  });               
+
+ // PUT /api/users/:id
+ router.put("/:id", async(req, res) => {
+    try{
+        const {id} = req.params;
+        const user = await User.findByIdAndUpdate(id, req.body);
+        if(!user){
+           return res.status(404).json({ message: "User not found" });
+           //can't find any user in db
+           }
+           const updatedUser = await User.findById(id);
+           res.status(200).json(updatedUser);
+        }
+catch(err){
+    res.status(500).json(err);
+    }
+    });
+
+ // DELETE /api/users/:id
+ router.delete("/:id", async(req, res) => {
+    try{
+        const {id} = req.params;
+        const user = await User.findByIdAndDelete(id);
+        if(!user){
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(user);
+        
+     } catch(err){
+    res.status(500).json(err);
+    }
+    })
+
+
+
 
 module.exports = router;
