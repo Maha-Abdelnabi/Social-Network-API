@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Thought = require("../../models/Thought");
+const Reaction = require("../../models/Reaction");
 
 // GET /api/thoughts
 router.get("/", async (req, res) => {
@@ -61,4 +62,47 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//POST /api/thoughts/:thoughtId/reactions
+router.post("/:thoughtId/reactions", async (req, res) => {
+  try {
+    const reaction = await Reaction.create(req.body);
+
+    const thought = await Thought.findOneAndUpdate(
+      req.params.thoughtId,
+      { $push: { reactions: reaction } },
+      { new: true }
+    );
+    if (!thought) {
+      return res
+        .status(400)
+        .json({ message: "No reaction found with this ID!!!" });
+    }
+    res.json({ message: "Reaction created successfully!!!" });
+  } catch (err) {
+    res.status(400).json({ message: "Error creating reaction!!!", err });
+  }
+});
+
+//DELETE /api/thoughts/:thoughtId/reactions/:reactionId
+router.delete("/:thoughtId/reactions/:reactionId", async (req, res) => {
+  try {
+    const reaction = await Reaction.findByIdAndDelete(req.params.reactionId);
+
+    const thought = await Thought.findByIdAndUpdate(
+      req.params.thoughtId,
+      { $pull: { reactions: req.params.reactionId } },
+      { new: true }
+    );
+    if (!thought) {
+      return res
+        .status(400)
+        .json({ message: "No reaction found with this ID!!!" });
+    }
+    res.json({ message: "Reaction deleted successfully!!!" });
+  } catch (err) {
+    res.status(400).json({ message: "Error deleting reaction!!!", err });
+  }
+});
+
 module.exports = router;

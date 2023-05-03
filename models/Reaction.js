@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const reactionSchema = new mongoose.Schema(
   {
     reactionId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
 
@@ -26,9 +26,9 @@ const reactionSchema = new mongoose.Schema(
     toJSON: {
       getters: true,
     },
-    id: false
+    id: false,
   }
-  );
+);
 
 const Reaction = mongoose.model("Reaction", reactionSchema);
 
