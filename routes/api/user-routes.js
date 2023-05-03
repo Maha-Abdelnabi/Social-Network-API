@@ -68,37 +68,34 @@ catch(err){
    // POST /api/users/:userID/friends/:friendID
    router.post("/:userID/friends/:friendID", async(req, res) => {
     try{
-    const user = await User.findByIdAndUpdate({_id: req.params.id}, {$push: {friends: req.params.friendId}});
-            if (!user) {
-                return res.status(400).json({ message: 'No user found with this ID!!!'});
+        const {userID, friendID} = req.params;
+        const user = await User.findByIdAndUpdate(userID);
+        const friend = await User.findById(friendID);
+        if(!user || !friend){
+            return res.status(404).json({ message: "User not found" });
             }
-
-            const friend = await User.findByIdAndUpdate({_id: req.params.friendId}, {$push: {friends: req.params.friendId}});
-            if (!friend) {
-                return res.status(400).json({ message: 'No friend found with this ID!!!', err });
-            }
-            res.json({ message: 'Added a new friend :) !!!'});
-        } catch (err) {
-            res.status(400).json({ message: 'Error adding friend!!!', err });
-        }
+            res.status(200).json({ user, friend});
+    }
+    catch{
+        res.status(500).json({ message: "User not found" });
+    }
     })
 
  // DELETE /api/users/:userID/friends/:friendID
  router.delete("/:userID/friends/:friendID", async(req, res) => {
   try{
-     const user = await User.findByIdAndUpdate({_id: req.params.id}, {$pull: {friends: req.params.friendId}});
-            if (!user) {
-                return res.status(400).json({ message: 'No user found with this ID!!!'});
-            }
-
-            const friend = await User.findByIdAndUpdate({_id: req.params.id}, {$pull: {friends: req.params.friendId}});
-            if (!friend) {
-                return res.json({ message: 'No friend found with this ID!!!'});
-            }
-            res.json({ message: 'Lost a friend :( !!!'});
-        } catch (err) {
-            res.status(400).json({ message: 'Error removing friend!!!', err });
+    const {userID, friendID} = req.params;
+    const user = await User.findByIdAndUpdate(userID);
+    const friend = await User.findById(friendID);
+    if(!user || !friend){
+        return res.status(404).json({ message: "User not found" });
         }
+        res.status(200).json({ user});
+        }
+        catch(err){
+            res.status(500).json(err);
+            }
+            
     })
 
 
