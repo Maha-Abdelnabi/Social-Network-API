@@ -12,14 +12,13 @@ var thoughtSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
-      get: (createdAtVal) =>
-        moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a"),
     },
 
     username: {
       type: String,
       required: true,
     },
+    // reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -28,11 +27,12 @@ var thoughtSchema = new mongoose.Schema(
     },
     id: false,
   }
+
 );
-// get total count of friends
-thoughtSchema.virtual("reactionCount").get(function () {
-  return this.reactions.length;
-});
+
+// thoughtSchema.virtual("reactionCount").get(function () {
+//   return this.reactions.length;
+// });
     const Thought = mongoose.model("Thought", thoughtSchema);
 
    

@@ -8,6 +8,7 @@ router.get("/", async (req, res) => {
     const thoughts = await Thought.find({});
     res.status(200).json(thoughts);
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 });
@@ -78,8 +79,9 @@ router.post("/:thoughtId/reactions", async (req, res) => {
         .status(400)
         .json({ message: "No reaction found with this ID!!!" });
     }
-    res.json({ message: "Reaction created successfully!!!" });
+    res.json(reaction);
   } catch (err) {
+    console.log(err)
     res.status(400).json({ message: "Error creating reaction!!!", err });
   }
 });
@@ -99,8 +101,9 @@ router.delete("/:thoughtId/reactions/:reactionId", async (req, res) => {
         .status(400)
         .json({ message: "No reaction found with this ID!!!" });
     }
-    res.json({ message: "Reaction deleted successfully!!!" });
+    res.json(reaction);
   } catch (err) {
+    console.log(err)
     res.status(400).json({ message: "Error deleting reaction!!!", err });
   }
 });
